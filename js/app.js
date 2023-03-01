@@ -1,6 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
-
-    const email = {
+    const datosFormulario = {
         email: '',
         asunto: '',
         mensaje: ''
@@ -55,25 +54,25 @@ document.addEventListener('DOMContentLoaded', function() {
     function validar(e) {
         if(e.target.value.trim() === '') {
             mostrarAlerta(`El Campo ${e.target.id} es obligatorio`, e.target.parentElement);
-            email[e.target.name] = '';
-            comprobarEmail();
+            datosFormulario[e.target.name] = '';
+            comprobarFormulario();
             return;
         }
 
         if(e.target.id === 'email' && !validarEmail(e.target.value)) {
             mostrarAlerta('El email no es válido', e.target.parentElement);
-            email[e.target.name] = '';
-            comprobarEmail();
+            datosFormulario[e.target.name] = '';
+            comprobarFormulario();
             return;
         }
 
         limpiarAlerta(e.target.parentElement);
 
         // Asignar los valores
-        email[e.target.name] = e.target.value.trim().toLowerCase();
+        datosFormulario[e.target.name] = e.target.value.trim().toLowerCase();
 
         // Comprobar el objeto de email
-        comprobarEmail();
+        comprobarFormulario();
     }
 
     function mostrarAlerta(mensaje, referencia) {
@@ -102,23 +101,32 @@ document.addEventListener('DOMContentLoaded', function() {
         return resultado;
     }
 
-    function comprobarEmail() {
-        if(Object.values(email).includes('')) {
-            btnSubmit.classList.add('opacity-50');
-            btnSubmit.disabled = true;
-            return
-        } 
+    function habilitarBoton() {
         btnSubmit.classList.remove('opacity-50');
         btnSubmit.disabled = false;
+    };
+
+    function deshabilitarBoton() {
+        btnSubmit.classList.add('opacity-50');
+        btnSubmit.disabled = true;
+    };
+
+    function comprobarFormulario() {
+        if(Object.values(datosFormulario).includes('')) {
+            deshabilitarBoton();
+            return
+        }
+        
+        habilitarBoton();
     }
 
     function resetFormulario() {
         // reiniciar el objeto
-        email.email = '';
-        email.asunto = '';
-        email.mensaje = '';
+        datosFormulario.email = '';
+        datosFormulario.asunto = '';
+        datosFormulario.mensaje = '';
 
         formulario.reset();
-        comprobarEmail();
+        deshabilitarBoton();
     }
 });
